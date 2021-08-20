@@ -36,7 +36,6 @@ def filter_access(seed, data_path, test_list, result_path, logging=True):
         current_path = data_path + '/cpu0/'+test_folder + '/'
         target_folder = current_path + str(seed) + '_1/'
         if os.path.isdir(target_folder):
-            cr3 = 0xf5d2000
             cpu = 0
             try:
                 exec_filename = getFileName(target_folder, 'trace', 'txt')
@@ -46,6 +45,7 @@ def filter_access(seed, data_path, test_list, result_path, logging=True):
                 return
             current_path = target_folder
             current_cr3 = 0
+            cr3 = 0
             exec_file = open(current_path + '/' + exec_filename, 'r')
             exec_content = exec_file.readlines()
             mem_access_pattern = '# MEM: ' + str(cpu) + ' c'
@@ -58,6 +58,8 @@ def filter_access(seed, data_path, test_list, result_path, logging=True):
                         if len(contents) != 15:
                             continue
                         current_cr3 = int(contents[13], 16)
+                        if cr3 == 0:
+                            cr3 = current_cr3
                         esp_value = int(contents[6], 16)
                         stack_begin = esp_value & 0xFFFFE000
                         stack_end = stack_begin + 0x2000
@@ -91,7 +93,6 @@ def filter_access(seed, data_path, test_list, result_path, logging=True):
         current_path = data_path + '/cpu1/'+test_folder + '/'
         target_folder = current_path +'1_' + str(seed) + '/'
         if os.path.isdir(target_folder):
-            cr3 = 0xefd3000
             cpu = 1
             try:
                 exec_filename = getFileName(target_folder, 'trace', 'txt')
@@ -100,6 +101,7 @@ def filter_access(seed, data_path, test_list, result_path, logging=True):
                 print("This test input is corrupted ", current_path)
                 return
             current_cr3 = 0
+            cr3 = 0
             current_path = target_folder
             exec_file = open(current_path + '/' + exec_filename, 'r')
             exec_content = exec_file.readlines()
@@ -113,6 +115,8 @@ def filter_access(seed, data_path, test_list, result_path, logging=True):
                         if len(contents) != 15:
                             continue
                         current_cr3 = int(contents[13], 16)
+                        if cr3 == 0:
+                            cr3 = current_cr3
                         esp_value = int(contents[6], 16)
                         stack_begin = esp_value & 0xFFFFE000
                         stack_end = stack_begin + 0x2000
