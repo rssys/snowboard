@@ -35,6 +35,8 @@ drwxrwxr-x 3 sishuai sishuai 4.0K Aug 20 16:38 ../
 -rw-rw-r-- 1 sishuai sishuai 673M Aug 19 12:44 uncommon-unaligned-channel.txt
 ```
 
+First, `mem-dict-2021-03-27-14-47-44` is a Python pickle object that encodes all the shared memory accesses we observed in our experiments and it can be used to reproduce `uncommon-XXX.txt` files. However, considering that reproducing them takes large amount of memory (~500GB), we include the raw PMC files we generated.
+
 In the next, we explain the data format of each file:
 
 - `uncommon-channel.txt`

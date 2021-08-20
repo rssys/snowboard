@@ -21,7 +21,7 @@ This repository contains the artifact for the SOSP'21 paper:
 
   The following instructions focus on a small workload (100 sequential test inputs) to demonstrate the usage of Snowboard. Running them takes about 16GB memory and  50GB disk on a Google cloud e2-standard-8 (8 vCPUs, 32 GB memory) machine.
 
-  For running larger workloads, we recommend (1) using a machine that has more memory (e.g., the full workload in our experiments takes about 300GB memory) and (2) using a large disk with filesystem compression enabled (e.g., we used a 10TB disk with btrfs + compress=zstd:3).
+  For running larger workloads, we recommend (1) using a machine that has more memory (e.g., the full workload in our experiments takes about 500GB memory) and (2) using a large disk with filesystem compression enabled (e.g., we used a 10TB disk with btrfs + compress=zstd:3).
 
 - These instructions have been tested in Ubuntu-18.04 so we recommend using the same environment.
 
