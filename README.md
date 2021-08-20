@@ -123,7 +123,7 @@ To actually distribute concurrent inputs across machines, please (1) properly co
    ```bash
    $ cd $ARTIFACT_HOME
    $ cd scripts/test
-   $ python3 ./generator.py $$SNOWBOARD_STORAGE/sequential-analysis-XXXX/
+   $ python3 ./generator.py $SNOWBOARD_STORAGE/sequential-analysis-XXXX/
    The generator can generate concurrent inputs based on the following strategies:
    [1]: M-CH strategy
    [2]: M-CH-DOUBLE strategy
