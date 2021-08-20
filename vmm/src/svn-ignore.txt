@@ -1,0 +1,16 @@
+qemu.pod
+*.d
+qmp-marshal.c
+trace.h-timestamp
+qapi-types.c
+config-host.h
+qemu.1
+config-host.h-timestamp
+trace.c-timestamp
+qemu-options.def
+trace.c
+trace.h
+config-host.mak
+config.log
+qapi-visit.c
+qapi-generated
