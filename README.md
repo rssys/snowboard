@@ -240,16 +240,17 @@ The occurrence of a bug can be checked either in the guest kernel console histor
   $ ./data-race.sh $SNOWBOARD_STORAGE/concurrent-test-XXXX
   ```
   
+
 **Output**
-  
+
 The output file is stored back to `$SNOWBOARD_STORAGE/concurrent-test-XXXX`  and we can find it by:
-  
+
 ```bash
   $ cd $SNOWBOARD_STORAGE/concurrent-test-2021-08-20-15-06-31
   $ find -name "*race_detection*source"
   ./20210820_150904_forkall_race_detector.txt.source
-  ```
-  
+```
+
 
 
 ## Validate results
@@ -329,7 +330,7 @@ For example, running following commands outputs the source code of top 100 write
 ```bash
 $ cd $ARTIFACT_HOME
 $ cd data/pmc
-$ top -n 100 uncommon-ins-pair.txt > top-100-ins-pair.txt
+$ head -n 100 uncommon-ins-pair.txt > top-100-ins-pair.txt
 $ cd scripts/analysis
 $ ./ins-pair-analysis.py ../../data/pmc/top-100-ins-pair.txt
 ```
