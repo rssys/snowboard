@@ -72,7 +72,7 @@ This package already includes all the above so it is not necessary to create the
 After `source setup.sh $SNOWBOARD_STORAGE` , run the following commands to start analyzing sequential test inputs:
 
 ```bash
-$ cd $artifact_package
+$ cd $ARTIFACT_HOME
 $ cd scripts/test
 # ./run-all.sh $start_id $end_id
 # Profile and analyze 100 sequential inputs
@@ -112,7 +112,7 @@ To actually distribute concurrent inputs across machines, please (1) properly co
 
    By running `source setup.sh $SNOWBOARD_STORAGE`, a Redis server whose configuration is `Host: localhost`, `Port: 6380` and `Password: snowboard-testing` is already running as a daemon.
 
-   Besides, an environment variable `$REDIS_URL` is also exported.
+   Besides, an environment variable `$REDIS_URL` is exported.
 
    
 
@@ -121,7 +121,7 @@ To actually distribute concurrent inputs across machines, please (1) properly co
    Run the following command to launch a generator:
 
    ```bash
-   $ cd $artifact_package
+   $ cd $ARTIFACT_HOME
    $ cd scripts/test
    $ python3 ./generator.py $$SNOWBOARD_STORAGE/sequential-analysis-XXXX/
    The generator can generate concurrent inputs based on the following strategies:
@@ -145,7 +145,7 @@ To actually distribute concurrent inputs across machines, please (1) properly co
    To check the statues of all concurrent input queues, run:
 
    ``````bash
-   $ cd $artifact_package
+   $ cd $ARTIFACT_HOME
    $ cd scripts/test
    $ rq info --url $REDIS_URL
    double-read  |██████████ 10
@@ -209,7 +209,7 @@ To actually distribute concurrent inputs across machines, please (1) properly co
 
    
 
-### 4. Inspecting concurrency testing results
+### Inspecting concurrency testing results
 
 The occurrence of a bug can be checked either in the guest kernel console history or the data race detection result.
 
@@ -235,23 +235,22 @@ The occurrence of a bug can be checked either in the guest kernel console histor
   We provide a script to analyze the detection result by showing the kernel code of the two data-racing instructions.
 
   ```bash
-  # We denote the full path of  as $detection_result
-  $ cd $artifact_package
+  $ cd $ARTIFACT_HOME
   $ cd scripts/analysis
   $ ./data-race.sh $SNOWBOARD_STORAGE/concurrent-test-XXXX
   ```
-
-  **Output**
-
-  The output file is stored back to `$SNOWBOARD_STORAGE/concurrent-test-XXXX`  and we can find it by:
-
-  ```bash
+  
+**Output**
+  
+The output file is stored back to `$SNOWBOARD_STORAGE/concurrent-test-XXXX`  and we can find it by:
+  
+```bash
   $ cd $SNOWBOARD_STORAGE/concurrent-test-2021-08-20-15-06-31
   $ find -name "*race_detection*source"
   ./20210820_150904_forkall_race_detector.txt.source
   ```
-
   
+
 
 ## Validate results
 
@@ -272,7 +271,7 @@ This package provides a script to reproduce concurrency bugs given concurrent in
 
    The above command will execute Snowboard on the concurrent input and the execution result will be stored in `SNOWBOARD_STORAGE/reproduce-XXXX`.
 
-2. Checking the occurrence of bugs
+2. Check the occurrence of bugs
 
    Please follow the instruction in Section: Inspecting-concurrency-testing-results.
 
@@ -323,11 +322,16 @@ More information about the format of PMC data is in [artifact-data](docs/artifac
 
 To understand a PMC or a PMC cluster, the kernel source code of the writer and reader will be very helpful.
 
-The following script outputs the source code of every writer and reader we identified in Linux 5.12-rc3.
+This package provides a script to find the source code of a pair of write and read instruction.
+
+For example, running following commands outputs the source code of top 100 writer and reader we identified in Linux 5.12-rc3.
 
 ```bash
+$ cd $ARTIFACT_HOME
+$ cd data/pmc
+$ top -n 100 uncommon-ins-pair.txt > top-100-ins-pair.txt
 $ cd scripts/analysis
-$ ./ins-pair-analysis.py ../../data/pmc/uncommon-ins-pair
+$ ./ins-pair-analysis.py ../../data/pmc/top-100-ins-pair.txt
 ```
 
 
