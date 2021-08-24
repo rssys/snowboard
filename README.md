@@ -317,7 +317,11 @@ $ wc -l uncommon-ins-pair
 738467 uncommon-ins-pair.txt
 ```
 
+Note this package does not include the PMC clusters under M-FULL strategy because a file containing such information will be too large (e.g., > 10TB).
+
 More information about the format of PMC data is in [artifact-data](docs/artifact-data.md).
+
+
 
 ### Analyze PMCs & PMC clusters
 
