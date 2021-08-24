@@ -8,7 +8,7 @@ import json
 # this script can reproduce a bug by executing the concurrent input
 if __name__ =='__main__':
     # path to store the testing result
-	output_path = os.environ.get('SNOWBOARD_STORAGE')
+    output_path = os.environ.get('SNOWBOARD_STORAGE')
     # read concurrent input file
     concurrent_input_filename = sys.argv[1]
     concurrent_input_file = open(concurrent_input_filename, 'r')
