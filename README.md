@@ -336,6 +336,7 @@ For example, running following commands outputs the source code of top 100 write
 $ cd $ARTIFACT_HOME
 $ cd data/pmc
 $ head -n 100 uncommon-ins-pair.txt > top-100-ins-pair.txt
+$ cd $ARTIFACT_HOME
 $ cd scripts/analysis
 $ ./ins-pair-analysis.py ../../data/pmc/top-100-ins-pair.txt
 ```
