@@ -89,7 +89,7 @@ $ ./run-all.sh 100 200
 
   ```bash
   $ cd $SNOWBOARD_STORAGE/
-  $ find -name "sequential-analysis-*" -type -d
+  $ find -name "sequential-analysis-*" -type d
   ./sequential-analysis-2021-08-20-14-16-39
   ```
 
@@ -203,7 +203,7 @@ To actually distribute concurrent inputs across machines, please (1) properly co
 
    ```bash
    $ cd $SNOWBOARD_STORAGE/
-   $ find -name "concurrent-test-*" -type -d
+   $ find -name "concurrent-test-*" -type d
    ./concurrent-test-2021-08-20-15-06-31
    ```
 
