@@ -287,6 +287,7 @@ This package provides a script to reproduce concurrency bugs given concurrent in
 | ---- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | #1   | BUG: unable to handle page fault for address                 | https://github.com/torvalds/linux/commit/1748f6a2cbc4694523f16da1c892b59861045b9d |
 | #9   | Data race: dev_ifsioc_locked() / eth_commit_mac_addr_change() | https://github.com/torvalds/linux/commit/3b23a32a63219f51a5298bc55a65ecee866e79d0 |
+| #11  | BUG: kernel NULL pointer dereference                         | https://github.com/torvalds/linux/commit/c42dd069be8dfc9b2239a5c89e73bbd08ab35de0 |
 | #12  | BUG: kernel NULL pointer dereference                         | https://github.com/torvalds/linux/commit/69e16d01d1de4f1249869de342915f608feb55d5 |
 | #15  | Data race: snd_ctl_elem_add()                                | https://patches.linaro.org/patch/421808/                     |
 | #17  | Data race: fanout_demux_rollover() / __fanout_unlink()       | https://github.com/torvalds/linux/commit/94f633ea8ade8418634d152ad0931133338226f6 |
