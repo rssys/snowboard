@@ -5,6 +5,7 @@ log_msg(){
 sudo apt-get update
 sudo apt-get install build-essential python gcc python3-pip
 sudo apt install libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev libgtk-3-dev
+sudo apt-get install gcc-multilib g++-multilib
 pip3 install rq
 source common.sh
 export SNOWBOARD_STORAGE=$1

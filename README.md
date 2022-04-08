@@ -65,6 +65,15 @@ The user of Snowboard needs to prepare the following:
 
 This package already includes all the above so it is not necessary to create them. 
 
+#### Create a VM snapshot (Optional)
+To create a new snapshot, run the following commands:
+
+```bash
+$ cd $ARTIFACT_HOME
+$ cd scripts/prerequisite
+$ create-snapshot.sh
+```
+Certain environment variables can be configued when running `setup.sh` to use a different kernel version or a new VM image.
 
 
 ### Analyze sequential test inputs and analyze PMCs
