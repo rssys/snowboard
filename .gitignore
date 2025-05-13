@@ -1,0 +1,8 @@
+testsuite/
+tools/gcc/gcc-*.tar.gz
+tools/gcc/gcc-*/
+tools/redis/redis-*/
+tools/redis/redis.tar.gz
+vmm/install/
+vmm/src/roms/seabios
+vmm/src/roms/vgabios
