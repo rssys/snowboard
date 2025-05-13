@@ -8,7 +8,10 @@ stack-related accesses (since these are by definition not shared). Also detects 
 (when an address is read a second time briefly after a jump instruction). 
 
 Input:
-- trace.txt: 
+- trace.txt: recorded memory accesses and CPU states.
+  Formats:
+    1. MemoryAccess: "### MEM: <cpu_index> <instruction_ptr> <mem_address> <value> <mem_index> <length (bits)> <access_type: {'L','S'}> <phys_addr>"
+    2. CPUState:     "<cpu_index> <eip> <eax> <ebx> <ecx> <edx> <esp> <ebp> <esi> <edi> <cs> <ss> <ds> <cr3> <gdt>"
 
 Output:
 - write.txt: records memory write operations. Format:

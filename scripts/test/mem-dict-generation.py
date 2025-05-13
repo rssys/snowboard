@@ -1,4 +1,40 @@
 #!/usr/bin/python3
+"""
+Memory Dictionary Generation Tool
+
+This script processes shared memory access trace files to build a dictionary of 
+memory operations. It reads access trace files (write.txt and read.txt) from multiple 
+test seeds, tracks memory operations, and identifies double read patterns. 
+The created pickle memory dictionary is the input of the PMC analysis script.
+
+input:
+- write.txt: records memory write operations found by sequential-shared-analysis.py. 
+  Format:
+    "<instruction_ptr> <mem_address> <value> <length> <type: 0=write>"
+
+- read.txt:  records memory read operations with double read flags. 
+  Format:
+    "<instruction_ptr> <mem_address> <value> <length> <type: 1=read> <double_read: bool{0,1}>"
+
+output:
+- mem-dict-<timestamp>: pickle file memory dictionary formatted as:
+    "mem_dict[addr][access_type][byte_length][instruction_ptr][value] -> [frequency, seed_set]"
+    where:
+    - addr: memory address accessed (only kernel addresses >= 0xC0000000)
+    - access_type: 0 for write, 1 for read
+    - byte_length: 0 for 8-bit, 1 for 16-bit, 2 for 32-bit access
+    - instruction_ptr: instruction pointer that performed the memory operation
+    - value: value read from or written to memory
+    - stored data includes operation [frequency] and a [seed_set]
+    
+    for reads, double reads are also added:
+    "mem_dict[addr][1][byte_length][instruction_ptr][value][double_read] -> [frequency, seed_set]"
+    where double_read: 0 for normal reads, 1 for double reads
+
+usage:
+  python mem-dict-generation.py [data_path] [seed_start] [seed_end] [existing_mem_dict_file (optional)]
+"""
+
 import sys
 import os
 import multiprocessing
