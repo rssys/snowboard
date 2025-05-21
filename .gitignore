@@ -6,3 +6,4 @@ tools/redis/redis.tar.gz
 vmm/install/
 vmm/src/roms/seabios
 vmm/src/roms/vgabios
+data/pmc
