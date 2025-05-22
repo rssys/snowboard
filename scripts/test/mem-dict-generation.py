@@ -32,7 +32,7 @@ output:
     where double_read: 0 for normal reads, 1 for double reads
 
 usage:
-  python mem-dict-generation.py [data_path] [seed_start] [seed_end] [existing_mem_dict_file (optional)]
+  python mem-dict-generation.py [data_path] [seed_start] [seed_end, inclusive index] [existing_mem_dict_file (optional)]
 """
 
 import sys
@@ -193,7 +193,7 @@ if __name__ == '__main__':
     data_path = sys.argv[1]
     
     interesting_seed =[]
-    for index in range(int(sys.argv[2]), int(sys.argv[3])):
+    for index in range(int(sys.argv[2]), int(sys.argv[3])+1):
         interesting_seed.append(index)
         
     if len(sys.argv) == 5:

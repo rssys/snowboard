@@ -27,7 +27,7 @@ Output:
     "write <shared_access> <total_access>\n read <shared_access> <double_read_num> <total_access>"
 
 Usage:
-  python sequential-shared-analysis.py [data_path] [seed_start] [seed_end]
+  python sequential-shared-analysis.py [data_path] [seed_start] [seed_end, inclusive index]
 
 Environment variables:
   KERNEL_DIR: directory containing the kernel disassembly file (vmlinux.onlydisas)
@@ -453,7 +453,7 @@ if __name__ == '__main__':
     time_start  = time.time()
 
     pool = multiprocessing.Pool(multiprocessing.cpu_count())
-    for index in range(seed_start, seed_end):
+    for index in range(seed_start, seed_end+1):
         pool.apply_async(filter_access, (index, data_path, test_list, result_path,))
     pool.close()
     pool.join()
