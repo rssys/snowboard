@@ -32,7 +32,7 @@ output:
     where double_read: 0 for normal reads, 1 for double reads
 
 usage:
-  python mem-dict-generation.py [data_path] [seed_start] [seed_end] [existing_mem_dict_file (optional)]
+  python mem-dict-generation.py [data_path] [seed_start] [seed_end, inclusive index] [existing_mem_dict_file (optional)]
 """
 
 import sys
@@ -45,21 +45,21 @@ import pickle
 import resource
 from datetime import datetime
 
-ACCESS_TYPE_WRITE = 0
-ACCESS_TYPE_READ  = 1
+ACCESS_TYPE_WRITE   = 0
+ACCESS_TYPE_READ    = 1
 
-KERNEL_ADDR_MIN = 0xC0000000
+KERNEL_ADDR_MIN     = 0xC0000000
 
-BIT_LENGTH_8 = 8
-BIT_LENGTH_16 = 16
-BIT_LENGTH_32 = 32
+BIT_LENGTH_8        = 8
+BIT_LENGTH_16       = 16
+BIT_LENGTH_32       = 32
 
-BYTE_INDEX_8BIT = 0
-BYTE_INDEX_16BIT = 1
-BYTE_INDEX_32BIT = 2
+BYTE_INDEX_8BIT     = 0
+BYTE_INDEX_16BIT    = 1
+BYTE_INDEX_32BIT    = 2
 
 def getFileName(path, prefix, postfix):
-    target_list = []
+    target_list     = []
 
     f_list = os.listdir(path)
     for f in f_list:
@@ -91,14 +91,14 @@ def access_dict():
             [defaultdict(read_ins_new_dict), defaultdict(read_ins_new_dict), defaultdict(read_ins_new_dict)]]
 
 def process_memory_access(contents, mem_dict, seed, set_limit, access_type):
-    ins = int(contents[0], 16)
-    addr = int(contents[1], 16)
+    ins     = int(contents[0], 16)
+    addr    = int(contents[1], 16)
     if addr < KERNEL_ADDR_MIN:
         return
-    value = int(contents[2], 16)
-    bits = int(contents[3])
+    value   = int(contents[2], 16)
+    bits    = int(contents[3]    )
     
-    if bits == BIT_LENGTH_8:
+    if bits   == BIT_LENGTH_8:
         byte_index = BYTE_INDEX_8BIT
     elif bits == BIT_LENGTH_16:
         byte_index = BYTE_INDEX_16BIT
@@ -110,10 +110,13 @@ def process_memory_access(contents, mem_dict, seed, set_limit, access_type):
     if access_type == ACCESS_TYPE_READ:
         double_read = int(contents[5])
         mem_dict[addr][access_type][byte_index][ins][value][double_read][0] += 1
+
         if len(mem_dict[addr][access_type][byte_index][ins][value][double_read][1]) < set_limit:
             mem_dict[addr][access_type][byte_index][ins][value][double_read][1].add(int(seed))
+
     else: #access_type == ACCESS_TYPE_WRITE
         mem_dict[addr][access_type][byte_index][ins][value][0] += 1
+
         if len(mem_dict[addr][access_type][byte_index][ins][value][1]) < set_limit:
             mem_dict[addr][access_type][byte_index][ins][value][1].add(int(seed))
 
@@ -150,11 +153,11 @@ def mem_dict_generation(path, seeds, old_mem_dict=None):
     return mem_dict
 
 def process_seed_file(current_path, seed, mem_dict, set_limit):
-    write_set_name = getFileName(current_path, 'write', 'txt')
-    read_set_name = getFileName(current_path, 'read', 'txt')
+    write_set_name  = getFileName(current_path, 'write', 'txt')
+    read_set_name   = getFileName(current_path, 'read', 'txt')
     
     write_file_path = os.path.join(current_path, write_set_name)
-    read_file_path = os.path.join(current_path, read_set_name)
+    read_file_path  = os.path.join(current_path, read_set_name)
     
     with open(write_file_path, 'r') as write_file:
         for line in write_file:
@@ -190,7 +193,7 @@ if __name__ == '__main__':
     data_path = sys.argv[1]
     
     interesting_seed =[]
-    for index in range(int(sys.argv[2]), int(sys.argv[3])):
+    for index in range(int(sys.argv[2]), int(sys.argv[3])+1):
         interesting_seed.append(index)
         
     if len(sys.argv) == 5:

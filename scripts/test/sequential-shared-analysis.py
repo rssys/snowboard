@@ -14,15 +14,20 @@ Input:
     2. CPUState:     "<cpu_index> <eip> <eax> <ebx> <ecx> <edx> <esp> <ebp> <esi> <edi> <cs> <ss> <ds> <cr3> <gdt>"
 
 Output:
-- write.txt: records memory write operations. Format:
+- write.txt: records memory write operations. 
+  Format:
     "<instruction_ptr> <mem_address> <value> <length> <type: 0=write>"
-- read.txt: records memory read operations with double read flags. Format:
+
+- read.txt: records memory read operations with double read flags. 
+  Format:
     "<instruction_ptr> <mem_address> <value> <length> <type: 1=read> <double_read: bool{0,1}>"
-- result.txt: summarizes shared memory accesses. Format:
+
+- result.txt: summarizes shared memory accesses. 
+  Format:
     "write <shared_access> <total_access>\n read <shared_access> <double_read_num> <total_access>"
 
 Usage:
-  python sequential-shared-analysis.py [data_path] [seed_start] [seed_end]
+  python sequential-shared-analysis.py [data_path] [seed_start] [seed_end, inclusive index]
 
 Environment variables:
   KERNEL_DIR: directory containing the kernel disassembly file (vmlinux.onlydisas)
@@ -143,10 +148,10 @@ class DisassemblyEntry:
         # Based on "c1000000:	mov    0x3da9c80,%ecx" format
         if len(line) > 9 and line[8] == ":":
             parts = line.split(":", 1)  # Split only on the first colon
-            self.address = parts[0].strip()
+            self.address     = parts[0].strip()
             self.instruction = parts[1].strip()
         else:
-            self.address = ""
+            self.address     = ""
             self.instruction = ""
     
     def is_jump_instruction(self):
@@ -170,21 +175,21 @@ def getFileName(path, prefix, postfix):
 def open_output_files(seed, result_path):
     if not os.path.isdir(result_path + '/' + str(seed)):
         os.makedirs(result_path + '/' + str(seed))
-    write_access_filename = result_path + '/' + str(seed) + '/write.txt'
-    read_access_filename = result_path + '/' + str(seed) + '/read.txt'
-    result_filename = result_path + '/' + str(seed) + '/result.txt'
-    write_access_file = open(write_access_filename, 'w')
-    read_access_file = open(read_access_filename, 'w')
-    result_file = open(result_filename, 'w')
+    write_access_filename   = result_path + '/' + str(seed) + '/write.txt'
+    read_access_filename    = result_path + '/' + str(seed) + '/read.txt'
+    result_filename         = result_path + '/' + str(seed) + '/result.txt'
+    write_access_file       = open(write_access_filename, 'w')
+    read_access_file        = open(read_access_filename, 'w')
+    result_file             = open(result_filename, 'w')
     
     return write_access_file, read_access_file, result_file
 
 def get_trace_file_path(seed, test_folder, cpu, data_path):
     if cpu == 0:
-        current_path = data_path + '/cpu0/' + test_folder + '/'
+        current_path  = data_path + '/cpu0/' + test_folder + '/'
         target_folder = current_path + str(seed) + '_1/'
     else:  # cpu == 1
-        current_path = data_path + '/cpu1/' + test_folder + '/'
+        current_path  = data_path + '/cpu1/' + test_folder + '/'
         target_folder = current_path + '1_' + str(seed) + '/'
     
     if not os.path.isdir(target_folder):
@@ -200,24 +205,24 @@ def get_trace_file_path(seed, test_folder, cpu, data_path):
 
 def process_write_access(seed, test_list, data_path, write_access_file, result_file):
     process_memory_access(
-        seed=seed, 
-        test_list=test_list[0], 
-        data_path=data_path, 
-        access_file=write_access_file, 
-        result_file=result_file, 
-        cpu=0, 
-        access_type='S'
+        seed        = seed, 
+        test_list   = test_list[0], 
+        data_path   = data_path, 
+        access_file = write_access_file, 
+        result_file = result_file, 
+        cpu         = 0, 
+        access_type = 'S'
     )
 
 def process_read_access(seed, test_list, data_path, read_access_file, result_file):
     process_memory_access(
-        seed=seed, 
-        test_list=test_list[1], 
-        data_path=data_path, 
-        access_file=read_access_file, 
-        result_file=result_file, 
-        cpu=1, 
-        access_type='L'
+        seed        = seed, 
+        test_list   = test_list[1], 
+        data_path   = data_path, 
+        access_file = read_access_file, 
+        result_file = result_file, 
+        cpu         = 1, 
+        access_type = 'L'
     )
 
 def process_memory_access(seed, test_list, data_path, access_file, result_file, cpu, access_type):
@@ -237,23 +242,23 @@ def process_memory_access(seed, test_list, data_path, access_file, result_file, 
         none: results are written to provided files
     """
     
-    total_access = 0
-    shared_access = 0
+    total_access    = 0
+    shared_access   = 0
     double_read_num = 0
     
     for test_folder in test_list:
         target_folder, exec_filename = get_trace_file_path(seed, test_folder, cpu, data_path)
         if not target_folder:
             continue
-        current_cr3 = 0
-        cr3 = 0
-        current_path = target_folder
-        exec_file = open(current_path + '/' + exec_filename, 'r')
-        exec_content = exec_file.readlines()
-        mem_access_pattern = '# MEM: ' + str(cpu) + ' c'
-        ins_pattern = str(cpu) + ' c'
-        stack_begin = 0
-        stack_end = 0
+        current_cr3         = 0
+        cr3                 = 0
+        current_path        = target_folder
+        exec_file           = open(current_path + '/' + exec_filename, 'r')
+        exec_content        = exec_file.readlines()
+        mem_access_pattern  = '# MEM: ' + str(cpu) + ' c'
+        ins_pattern         = str(cpu) + ' c'
+        stack_begin         = 0
+        stack_end           = 0
         for line_index in range(0, len(exec_content)):
             line = exec_content[line_index]
             if line.find(mem_access_pattern) == -1:
@@ -264,10 +269,11 @@ def process_memory_access(seed, test_list, data_path, access_file, result_file, 
                 if len(contents) != CPU_STATE_LENGTH:
                     continue
 
-                cpu_state = CPUState(contents)
+                cpu_state   = CPUState(contents)
                 current_cr3 = cpu_state.cr3
                 if cr3 == 0:
                     cr3 = current_cr3
+
                 stack_begin, stack_end = cpu_state.get_stack_range()
                 continue
             
@@ -347,8 +353,8 @@ def check_double_read(line_index, exec_content, mem_access, cr3, stack_begin, st
             if len(compare_contents) != CPU_STATE_LENGTH:
                 continue
 
-            cpu_state = CPUState(compare_contents)
-            compare_current_cr3 = cpu_state.cr3
+            cpu_state            = CPUState(compare_contents)
+            compare_current_cr3  = cpu_state.cr3
             compare_possible_ins = cpu_state.eip
 
             if len(disas_ins_dict[compare_possible_ins]) == 0:
@@ -416,11 +422,13 @@ def load_disassembly_data():
     if kernel_dir is None:
         print("error happens when accessing environment vairable KERNEL_DIR")
         exit(1)
+
     linux_disas_filename = kernel_dir + "/vmlinux.onlydisas"
-    ip_disas = defaultdict(str)
-    linux_disas_file = open(linux_disas_filename, 'r')
+    ip_disas             = defaultdict(str)
+    linux_disas_file     = open(linux_disas_filename, 'r')
+
     for line in linux_disas_file:
-        disas_entry = DisassemblyEntry(line)
+        disas_entry      = DisassemblyEntry(line)
         if disas_entry.address != "":
             ip_disas[disas_entry.address] = disas_entry.instruction
             # print(disas_entry.address, disas_entry.instruction)
@@ -430,23 +438,25 @@ def load_disassembly_data():
 disas_ins_dict = load_disassembly_data()
 
 if __name__ == '__main__':
-    data_path = sys.argv[1]
-    seed_start = int(sys.argv[2])
-    seed_end = int(sys.argv[3])
-
-    test_list = get_test_lists(data_path)
+    data_path   =     sys.argv[1]
+    seed_start  = int(sys.argv[2])
+    seed_end    = int(sys.argv[3])
+    test_list   = get_test_lists(data_path)
     
     print("Analyzing sequential tests between ", seed_start, seed_end)
-    time_now = datetime.now()
-    timestamp = time_now.strftime("%Y-%m-%d-%H-%M-%S")
+    time_now    = datetime.now()
+    timestamp   = time_now.strftime("%Y-%m-%d-%H-%M-%S")
+
     result_path =  data_path + '/shared-' + timestamp + '/'
     if not os.path.isdir(result_path):
         os.makedirs(result_path)
-    time_start = time.time()
+    time_start  = time.time()
+
     pool = multiprocessing.Pool(multiprocessing.cpu_count())
-    for index in range(seed_start, seed_end):
+    for index in range(seed_start, seed_end+1):
         pool.apply_async(filter_access, (index, data_path, test_list, result_path,))
     pool.close()
     pool.join()
-    time_end = time.time()
+
+    time_end    = time.time()
     print('time cost',time_end-time_start, 's')
